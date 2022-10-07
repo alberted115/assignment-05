@@ -8,7 +8,7 @@ namespace GildedRose
         public IList<Item> Items { get; set; }
         static void Main(string[] args)
         {
-            System.Console.WriteLine("OMGHAI!");
+            /*System.Console.WriteLine("OMGHAI!");
 
             var app = new Program()
                           {
@@ -53,7 +53,7 @@ namespace GildedRose
                 }
                 Console.WriteLine("");
                 app.UpdateQuality();
-            }
+            }*/
 
         }
 
