@@ -14,31 +14,37 @@ namespace GildedRose
                           {
                               Items = new List<Item>
                                           {
-                new Item { Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20 },
-                new Item { Name = "Aged Brie", SellIn = 2, Quality = 0 },
-                new Item { Name = "Elixir of the Mongoose", SellIn = 5, Quality = 7 },
-                new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 },
-                new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = -1, Quality = 80 },
+                new Item { Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20, UpdateMethod = ItemUpdateMethods.UpdateDefault},
+                new Item { Name = "Aged Brie", SellIn = 2, Quality = 0, UpdateMethod = ItemUpdateMethods.UpdateBrie },
+                new Item { Name = "Elixir of the Mongoose", SellIn = 5, Quality = 7, UpdateMethod = ItemUpdateMethods.UpdateDefault },
+                new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80, UpdateMethod = (item) => { }
+                },
+                new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = -1, Quality = 80,UpdateMethod = (item) => { } },
                 new Item
                 {
                     Name = "Backstage passes to a TAFKAL80ETC concert",
                     SellIn = 15,
-                    Quality = 20
+                    Quality = 20,
+                    UpdateMethod = ItemUpdateMethods.UpdateBackstage
                 },
                 new Item
                 {
                     Name = "Backstage passes to a TAFKAL80ETC concert",
                     SellIn = 10,
-                    Quality = 49
+                    Quality = 49,
+                    UpdateMethod = ItemUpdateMethods.UpdateBackstage
+                    
+                    
                 },
                 new Item
                 {
                     Name = "Backstage passes to a TAFKAL80ETC concert",
                     SellIn = 5,
-                    Quality = 49
+                    Quality = 49,
+                    UpdateMethod = ItemUpdateMethods.UpdateBackstage
                 },
 				// this conjured item does not work properly yet
-				new Item { Name = "Conjured Mana Cake", SellIn = 3, Quality = 6 }
+				new Item { Name = "Conjured Mana Cake", SellIn = 3, Quality = 10,UpdateMethod = ItemUpdateMethods.UpdateConjured }
                                           }
 
                           };
@@ -59,80 +65,11 @@ namespace GildedRose
 
         public void UpdateQuality()
         {
-            for (var i = 0; i < Items.Count; i++)
+            foreach (var item in Items)
             {
-                if (Items[i].Name != "Aged Brie" && Items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
-                {
-                    if (Items[i].Quality > 0)
-                    {
-                        if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
-                        {
-                            Items[i].Quality = Items[i].Quality - 1;
-                        }
-                    }
-                }
-                else
-                {
-                    if (Items[i].Quality < 50)
-                    {
-                        Items[i].Quality = Items[i].Quality + 1;
-
-                        if (Items[i].Name == "Backstage passes to a TAFKAL80ETC concert")
-                        {
-                            if (Items[i].SellIn < 11)
-                            {
-                                if (Items[i].Quality < 50)
-                                {
-                                    Items[i].Quality = Items[i].Quality + 1;
-                                }
-                            }
-
-                            if (Items[i].SellIn < 6)
-                            {
-                                if (Items[i].Quality < 50)
-                                {
-                                    Items[i].Quality = Items[i].Quality + 1;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
-                {
-                    Items[i].SellIn = Items[i].SellIn - 1;
-                }
-
-                if (Items[i].SellIn < 0)
-                {
-                    if (Items[i].Name != "Aged Brie")
-                    {
-                        if (Items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
-                        {
-                            if (Items[i].Quality > 0)
-                            {
-                                if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
-                                {
-                                    Items[i].Quality = Items[i].Quality - 1;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Items[i].Quality = Items[i].Quality - Items[i].Quality;
-                        }
-                    }
-                    else
-                    {
-                        if (Items[i].Quality < 50)
-                        {
-                            Items[i].Quality = Items[i].Quality + 1;
-                        }
-                    }
-                }
+                item.UpdateQuality();
             }
         }
-
     }
 
     public class Item
@@ -140,18 +77,85 @@ namespace GildedRose
         public string Name { get; set; }
         public int SellIn { get; set; }
         public int Quality { get; set; }
+        public UpdateItemQuality UpdateMethod { get; set; }
+        
         public delegate void UpdateItemQuality(Item item);
-        private UpdateItemQuality _updateMethod;
-
-        public Item(ref UpdateItemQuality updateMethod)
-        {
-            _updateMethod = updateMethod;
-        }
+        
         public void UpdateQuality()
         {
-            _updateMethod(this);
+            UpdateMethod(this);
+        }
+    }
+
+    public static class ItemUpdateMethods
+    { 
+        public static void UpdateDefault(Item item)
+        {
+            if (item.Quality > 0)
+            {
+                item.Quality--;
+                if (item.SellIn < 0 && item.Quality>0)
+                {
+                    item.Quality--;
+                }
+            }
+            item.SellIn--;
         }
         
         
+        public static void UpdateBrie(Item item)
+        {
+            if (item.Quality < 50)
+            {
+                item.Quality++;
+            }
+            item.SellIn--;
+        }
+        
+        public static void UpdateBackstage(Item item)
+        {
+            if (item.SellIn < 0)
+            {
+                item.Quality = 0;
+                return;
+            }
+            if (item.Quality < 50)
+            {
+                item.Quality++;
+                if (item.SellIn < 11 && item.Quality<50)
+                {
+                    item.Quality++;
+                    if (item.SellIn < 6 && item.Quality<50)
+                    {
+                        item.Quality++;
+                    }
+                }
+            }
+            item.SellIn--;
+        }
+        
+        public static void UpdateConjured(Item item)
+        {
+            if (item.Quality > 1)
+            {
+                item.Quality-=2;
+                if (item.SellIn < 0)
+                {
+                    if (item.Quality > 1)
+                    {
+                        item.Quality-=2;
+                    }
+                    else
+                    {
+                        item.Quality = 0;
+                    }
+                }
+            }
+            else
+            {
+                item.Quality = 0;
+            }
+            item.SellIn--;
+        }  
     }
 }
