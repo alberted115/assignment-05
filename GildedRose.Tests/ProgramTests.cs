@@ -86,7 +86,7 @@ public class ProgramTests
 
     
     //Conjured item tests, udkommenteret da conjured items ikke er implementeret i denne version
-    /*
+    
     [Fact]
     public void conjured_item_degrades_faster()
     {
@@ -94,7 +94,7 @@ public class ProgramTests
         _program.UpdateQuality();
         _program.Items[0].Quality.Should().Be(4);
 
-    }*/
+    }
     
     
     
