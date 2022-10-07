@@ -138,12 +138,20 @@ namespace GildedRose
     public class Item
     {
         public string Name { get; set; }
-
         public int SellIn { get; set; }
-
         public int Quality { get; set; }
-        
-        private delegate
-    }
+        public delegate void UpdateItemQuality(Item item);
+        private UpdateItemQuality _updateMethod;
 
+        public Item(ref UpdateItemQuality updateMethod)
+        {
+            _updateMethod = updateMethod;
+        }
+        public void UpdateQuality()
+        {
+            _updateMethod(this);
+        }
+        
+        
+    }
 }
