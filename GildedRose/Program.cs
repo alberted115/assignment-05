@@ -4,9 +4,9 @@ using System.Data;
 
 namespace GildedRose
 {
-    class Program
+    public class Program
     {
-        IList<Item> Items;
+        public IList<Item> Items { get; set; }
         static void Main(string[] args)
         {
             System.Console.WriteLine("OMGHAI!");
