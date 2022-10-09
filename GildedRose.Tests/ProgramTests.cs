@@ -94,7 +94,7 @@ public class ProgramTests
     }
     
     [Fact]
-    public void test()
+    public void Aged_brie_quality_should_increase_as_update()
     {
         
         _program.Items.Add(new Program.AgedBrie() { Name = "Aged Brie",Quality =30,SellIn = -5});
@@ -107,14 +107,21 @@ public class ProgramTests
     
     //Conjured item tests, udkommenteret da conjured items ikke er implementeret i denne version
     
-    /*[Fact]
+    [Fact]
     public void conjured_item_degrades_faster()
     {
-        _program.Items.Add(new Item() { Name = "Conjured mana cake",Quality =6,SellIn = 5});
+        _program.Items.Add(new Program.ConjuredItem() { Name = "Conjured mana cake",Quality =6,SellIn = 5});
         _program.UpdateQuality();
         _program.Items[0].Quality.Should().Be(4);
+    }
 
-    }*/
+    [Fact]
+    public void conjured_item_with_1_quality()
+    {
+        _program.Items.Add(new Program.ConjuredItem() { Name = "Conjured mana cake",Quality =1,SellIn = 5});
+        _program.UpdateQuality();
+        _program.Items[0].Quality.Should().Be(0);
+    }
     
     
     

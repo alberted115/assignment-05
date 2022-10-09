@@ -182,7 +182,8 @@ namespace GildedRose
             {
                 Quality = Quality > 0 ? Quality - 1 : Quality;
                 Quality = SellIn < 0 && Quality > 0 ? Quality - 1 : Quality;
-                
+                SellIn--;
+
             }
         }
         
@@ -194,7 +195,18 @@ namespace GildedRose
                 Quality = Quality < 50 ? Quality + 1 : Quality;
                 Quality = SellIn < 11 && Quality < 50? Quality + 1 : Quality;
                 Quality = SellIn < 6 && Quality < 50? Quality + 1 : Quality;
+                SellIn--;
 
+
+            }
+        }
+        
+        public class ConjuredItem : Item, IItem
+        {
+            public void UpdateQualityInClass()
+            {
+                Quality = Quality > 2 ? Quality - 2 : Quality = (Quality == 1 ? Quality - 1 : Quality);
+                SellIn--;
 
             }
         }
