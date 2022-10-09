@@ -84,17 +84,35 @@ public class ProgramTests
         _program.Items[1].Quality.Should().Be(32);
     }
 
+    [Fact]
+    public void items_with_sellIn_below_0_decrease_by_two()
+    {
+        
+        _program.Items.Add(new Item() { Name = "Cloak of Strength",Quality =30,SellIn = -1});
+        _program.UpdateQuality();
+        _program.Items[0].Quality.Should().Be(28);
+    }
+    
+    [Fact]
+    public void test()
+    {
+        
+        _program.Items.Add(new Item() { Name = "Aged Brie",Quality =30,SellIn = -5});
+        _program.UpdateQuality();
+        _program.Items[0].Quality.Should().Be(32);
+    }
+
     
     //Conjured item tests, udkommenteret da conjured items ikke er implementeret i denne version
     
-    [Fact]
+    /*[Fact]
     public void conjured_item_degrades_faster()
     {
         _program.Items.Add(new Item() { Name = "Conjured mana cake",Quality =6,SellIn = 5});
         _program.UpdateQuality();
         _program.Items[0].Quality.Should().Be(4);
 
-    }
+    }*/
     
     
     
