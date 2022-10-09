@@ -2,5 +2,8 @@
 
 public interface IUpdateable
 {
-    public void updateItemQuality(Item item);
+     public static void UpdateItemQuality(Program.Item item)
+     {
+          //Do nothing 
+     }
 }
