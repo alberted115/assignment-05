@@ -5,7 +5,8 @@ namespace GildedRose
 {
     public class Program
     {
-        public IList<Item> Items { get; set; }
+        public IList<IItem> Items { get; set; }
+
         static void Main(string[] args)
         {
             /*System.Console.WriteLine("OMGHAI!");
@@ -59,6 +60,13 @@ namespace GildedRose
 
         public void UpdateQuality()
         {
+            foreach (IItem item in Items)
+            {
+                item.UpdateQualityInClass();
+            }
+
+
+            /*
             for (var i = 0; i < Items.Count; i++)
             {
                 if (Items[i].Name != "Aged Brie" && Items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
@@ -132,16 +140,68 @@ namespace GildedRose
                 }
             }
         }
+*/
+        }
 
+        public class Item
+        {
+            public string Name { get; set; }
+
+            public int SellIn { get; set; }
+
+            public int Quality { get; set; }
+        }
+        public interface IItem
+        {
+            public string Name { get; set; }
+
+            public int SellIn { get; set; }
+
+            public int Quality { get; set; }
+            public void UpdateQualityInClass();
+        }
+
+        public class AgedBrie : Item, IItem
+        {
+            public void UpdateQualityInClass()
+            {
+                Quality = Quality < 50 ? Quality + 1 : Quality;
+                Quality = SellIn < 0 ? Quality + 1 : Quality;
+                SellIn--;
+            }
+        }
+        public class LegendaryItem : Item, IItem
+        {
+            public void UpdateQualityInClass()
+            {
+                //None may change the quality of legendary items!
+            }
+        }
+        public class NormalItem : Item, IItem
+        {
+            public void UpdateQualityInClass()
+            {
+                Quality = Quality > 0 ? Quality-- : Quality;
+                Quality = SellIn < 0 && Quality > 0 ? Quality-- : Quality;
+                
+            }
+        }
+        
+        public class TicketItem : Item, IItem
+        {
+            public void UpdateQualityInClass()
+            {
+                Quality = SellIn < 0 ? Quality = 0 : Quality;
+                Quality = Quality < 50 ? Quality++ : Quality;
+                Quality = SellIn < 11 && Quality < 50? Quality++ : Quality;
+                Quality = SellIn < 6 && Quality < 50? Quality++ : Quality;
+
+
+            }
+        }
+        
+        
+
+        
     }
-
-    public class Item
-    {
-        public string Name { get; set; }
-
-        public int SellIn { get; set; }
-
-        public int Quality { get; set; }
-    }
-
 }
