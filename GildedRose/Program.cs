@@ -65,7 +65,6 @@ namespace GildedRose
                 item.UpdateQualityInClass();
             }
 
-
             /*
             for (var i = 0; i < Items.Count; i++)
             {
@@ -166,7 +165,7 @@ namespace GildedRose
             public void UpdateQualityInClass()
             {
                 Quality = Quality < 50 ? Quality + 1 : Quality;
-                Quality = SellIn < 0 ? Quality + 1 : Quality;
+                Quality = SellIn < 0 && Quality < 50 ? Quality + 1 : Quality;
                 SellIn--;
             }
         }
@@ -181,8 +180,8 @@ namespace GildedRose
         {
             public void UpdateQualityInClass()
             {
-                Quality = Quality > 0 ? Quality-- : Quality;
-                Quality = SellIn < 0 && Quality > 0 ? Quality-- : Quality;
+                Quality = Quality > 0 ? Quality - 1 : Quality;
+                Quality = SellIn < 0 && Quality > 0 ? Quality - 1 : Quality;
                 
             }
         }
@@ -192,9 +191,9 @@ namespace GildedRose
             public void UpdateQualityInClass()
             {
                 Quality = SellIn < 0 ? Quality = 0 : Quality;
-                Quality = Quality < 50 ? Quality++ : Quality;
-                Quality = SellIn < 11 && Quality < 50? Quality++ : Quality;
-                Quality = SellIn < 6 && Quality < 50? Quality++ : Quality;
+                Quality = Quality < 50 ? Quality + 1 : Quality;
+                Quality = SellIn < 11 && Quality < 50? Quality + 1 : Quality;
+                Quality = SellIn < 6 && Quality < 50? Quality + 1 : Quality;
 
 
             }
