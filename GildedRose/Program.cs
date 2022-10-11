@@ -210,6 +210,14 @@ namespace GildedRose
 
             }
         }
+
+        public class ItemFactory
+        {
+            public static Item CreateItem(Item item)
+            {
+                
+            }
+        }
         
         
 
