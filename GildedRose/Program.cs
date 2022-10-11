@@ -5,7 +5,7 @@ namespace GildedRose
 {
     public class Program
     {
-        public IList<IItem> Items { get; set; }
+        public IList<Item> Items { get; set; }
 
         static void Main(string[] args)
         {
@@ -60,6 +60,11 @@ namespace GildedRose
 
         public void UpdateQuality()
         {
+            for (int i = 0; i < Items.Count; i++)
+            {
+                Items[i] = ItemFactory.CreateItem(Items[i]);
+            }
+
             foreach (IItem item in Items)
             {
                 item.UpdateQualityInClass();
@@ -215,7 +220,24 @@ namespace GildedRose
         {
             public static Item CreateItem(Item item)
             {
-                
+                switch (item.Name)
+                {
+                    case "Sulfuras, Hand of Ragnaros":
+                        return new LegendaryItem() { Name = item.Name, Quality = item.Quality, SellIn = item.SellIn };
+
+                    case "Aged Brie":
+                        return new AgedBrie(){ Name = item.Name, Quality = item.Quality, SellIn = item.SellIn };
+                    
+                    case "Backstage passes to a TAFKAL80ETC concert":
+                        return new TicketItem() { Name = item.Name, Quality = item.Quality, SellIn = item.SellIn };
+                    
+                    default:
+                        if (item.Name.ToLowerInvariant().Contains("conjured"))
+                        {
+                            return new ConjuredItem(){ Name = item.Name, Quality = item.Quality, SellIn = item.SellIn };
+                        }
+                        return new NormalItem(){ Name = item.Name, Quality = item.Quality, SellIn = item.SellIn };
+                }   
             }
         }
         

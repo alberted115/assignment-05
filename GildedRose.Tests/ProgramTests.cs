@@ -8,7 +8,7 @@ public class ProgramTests
     public ProgramTests()
     {
         _program = new Program();
-        _program.Items = new List<Program.IItem>();
+        _program.Items = new List<Program.Item>();
 
     }
 
