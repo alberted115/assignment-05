@@ -6,6 +6,7 @@ namespace GildedRose
     public class Program
     {
         public IList<Item> Items { get; set; }
+
         static void Main(string[] args)
         {
             /*System.Console.WriteLine("OMGHAI!");
@@ -59,6 +60,17 @@ namespace GildedRose
 
         public void UpdateQuality()
         {
+            for (int i = 0; i < Items.Count; i++)
+            {
+                Items[i] = ItemFactory.CreateItem(Items[i]);
+            }
+
+            foreach (IItem item in Items)
+            {
+                item.UpdateQualityInClass();
+            }
+
+            /*
             for (var i = 0; i < Items.Count; i++)
             {
                 if (Items[i].Name != "Aged Brie" && Items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
@@ -132,16 +144,105 @@ namespace GildedRose
                 }
             }
         }
+*/
+        }
 
+        public class Item
+        {
+            public string Name { get; set; }
+
+            public int SellIn { get; set; }
+
+            public int Quality { get; set; }
+        }
+        public interface IItem
+        {
+            public string Name { get; set; }
+
+            public int SellIn { get; set; }
+
+            public int Quality { get; set; }
+            public void UpdateQualityInClass();
+        }
+
+        public class AgedBrie : Item, IItem
+        {
+            public void UpdateQualityInClass()
+            {
+                Quality = Quality < 50 ? Quality + 1 : Quality;
+                Quality = SellIn < 0 && Quality < 50 ? Quality + 1 : Quality;
+                SellIn--;
+            }
+        }
+        public class LegendaryItem : Item, IItem
+        {
+            public void UpdateQualityInClass()
+            {
+                //None may change the quality of legendary items!
+            }
+        }
+        public class NormalItem : Item, IItem
+        {
+            public void UpdateQualityInClass()
+            {
+                Quality = Quality > 0 ? Quality - 1 : Quality;
+                Quality = SellIn < 0 && Quality > 0 ? Quality - 1 : Quality;
+                SellIn--;
+
+            }
+        }
+        
+        public class TicketItem : Item, IItem
+        {
+            public void UpdateQualityInClass()
+            {
+                Quality = SellIn < 0 ? Quality = 0 : Quality;
+                Quality = Quality < 50 ? Quality + 1 : Quality;
+                Quality = SellIn < 11 && Quality < 50? Quality + 1 : Quality;
+                Quality = SellIn < 6 && Quality < 50? Quality + 1 : Quality;
+                SellIn--;
+
+
+            }
+        }
+        
+        public class ConjuredItem : Item, IItem
+        {
+            public void UpdateQualityInClass()
+            {
+                Quality = Quality > 2 ? Quality - 2 : Quality = (Quality == 1 ? Quality - 1 : Quality);
+                SellIn--;
+
+            }
+        }
+
+        public class ItemFactory
+        {
+            public static Item CreateItem(Item item)
+            {
+                switch (item.Name)
+                {
+                    case "Sulfuras, Hand of Ragnaros":
+                        return new LegendaryItem() { Name = item.Name, Quality = item.Quality, SellIn = item.SellIn };
+
+                    case "Aged Brie":
+                        return new AgedBrie(){ Name = item.Name, Quality = item.Quality, SellIn = item.SellIn };
+                    
+                    case "Backstage passes to a TAFKAL80ETC concert":
+                        return new TicketItem() { Name = item.Name, Quality = item.Quality, SellIn = item.SellIn };
+                    
+                    default:
+                        if (item.Name.ToLowerInvariant().Contains("conjured"))
+                        {
+                            return new ConjuredItem(){ Name = item.Name, Quality = item.Quality, SellIn = item.SellIn };
+                        }
+                        return new NormalItem(){ Name = item.Name, Quality = item.Quality, SellIn = item.SellIn };
+                }   
+            }
+        }
+        
+        
+
+        
     }
-
-    public class Item
-    {
-        public string Name { get; set; }
-
-        public int SellIn { get; set; }
-
-        public int Quality { get; set; }
-    }
-
 }
